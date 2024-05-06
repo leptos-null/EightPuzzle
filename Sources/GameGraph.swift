@@ -46,7 +46,12 @@ extension Path {
         // the frontier is made by a path that starts nowhere and ends in the source
         var frontier = [Path(to: source)]
         
-        while let cheapestPathInFrontier = frontier.popLast() { // getting the cheapest path available
+        // use indices so we don't have to move any elements
+        var headIndex = frontier.startIndex
+        while headIndex != frontier.endIndex { // getting the cheapest path available
+            let cheapestPathInFrontier = frontier[headIndex]
+            frontier.formIndex(after: &headIndex)
+            
             let lastNode = cheapestPathInFrontier.node
             guard !lastNode.visited else { continue } // making sure we haven't visited the node already
             
@@ -60,7 +65,7 @@ extension Path {
                 .filter { !$0.visited }
                 .map { Path(to: $0, previousPath: cheapestPathInFrontier) }
             
-            frontier.insert(contentsOf: connectionPaths, at: 0)
+            frontier.append(contentsOf: connectionPaths)
         }
         return nil // we didn't find a path
     }
