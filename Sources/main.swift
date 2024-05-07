@@ -43,22 +43,22 @@ private func timeBlock<R>(_ block: () -> R) -> (R, DispatchTimeInterval) {
     return (result, start.distance(to: end))
 }
 
-let solutionBoard = GameBoard(
-    topLeft: "1", topMid: "2", topRight: "3",
-    midLeft: "4", midMid: "5", midRight: "6",
-    botLeft: "7", botMid: "8", botRight: " "
-)
+let solutionBoard = GameBoard([
+    [ "1", "2", "3" ],
+    [ "4", "5", "6" ],
+    [ "7", "8", " " ]
+])
 
 // 31 moves is the _most_ amount of moves any given game board
 // can be solved in, if solved in the least amount of moves.
 // In other words, there does not exist a game board such that
 // the least amount of moves to solve it is greater than 31
 
-let question = GameBoard(
-    topLeft: " ", topMid: "5", topRight: "7",
-    midLeft: "6", midMid: "8", midRight: "4",
-    botLeft: "1", botMid: "2", botRight: "3"
-)
+let question = GameBoard([
+    [ " ", "5", "7" ],
+    [ "6", "8", "4" ],
+    [ "1", "2", "3" ]
+])
 
 let (graph, graphBuildInterval) = timeBlock {
     GameGraph(source: solutionBoard)
@@ -79,4 +79,13 @@ if let path {
     }
 } else {
     print("No path found")
+}
+
+
+extension Int: TileProtocol {
+    var isBlank: Bool { self == .zero }
+}
+
+extension String: TileProtocol {
+    var isBlank: Bool { self == " " }
 }

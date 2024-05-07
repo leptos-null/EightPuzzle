@@ -72,12 +72,14 @@ extension Path {
 }
 // end of code from https://www.fivestars.blog/articles/dijkstra-algorithm-swift
 
-class GameGraph {
-    let source: GameBoard
+class GameGraph<Tile: TileProtocol> {
+    typealias TypedBoard = GameBoard<Tile>
     
-    private var internTable: [GameBoard: Node<GameBoard>] = [:]
+    let source: TypedBoard
     
-    private func node(for gameBoard: GameBoard) -> Node<GameBoard> {
+    private var internTable: [TypedBoard: Node<TypedBoard>] = [:]
+    
+    private func node(for gameBoard: TypedBoard) -> Node<TypedBoard> {
         if let existing = internTable[gameBoard] {
             return existing
         }
@@ -86,14 +88,14 @@ class GameGraph {
         return node
     }
     
-    private func connectSiblings(for gameBoard: GameBoard) -> [GameBoard] {
+    private func connectSiblings(for gameBoard: TypedBoard) -> [TypedBoard] {
         let root = node(for: gameBoard)
         let siblings = gameBoard.validTransitions
         root.connections = siblings.map(self.node(for:)) // side-effects
         return siblings
     }
     
-    init(source: GameBoard) {
+    init(source: TypedBoard) {
         self.source = source
         
         var boardList = [source]
@@ -104,7 +106,7 @@ class GameGraph {
         }
     }
     
-    func leastMoves(to gameBoard: GameBoard) -> [GameBoard]? {
+    func leastMoves(to gameBoard: TypedBoard) -> [TypedBoard]? {
         // we haven't seen this node before - there's no path to it
         guard let destNode = internTable[gameBoard] else { return nil }
         
