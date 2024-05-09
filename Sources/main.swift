@@ -89,3 +89,11 @@ extension Int: TileProtocol {
 extension String: TileProtocol {
     var isBlank: Bool { self == " " }
 }
+
+extension String: PrintableTile {
+    var tileCharacter: Character { .init(self) }
+}
+
+extension Int: PrintableTile {
+    var tileCharacter: Character { .init(String(self, radix: 36)) }
+}

@@ -11,6 +11,10 @@ protocol TileProtocol: Hashable {
     var isBlank: Bool { get }
 }
 
+protocol PrintableTile {
+    var tileCharacter: Character { get }
+}
+
 struct GameBoard<Tile: TileProtocol>: Hashable {
     struct Location: Hashable {
         let column: Int
@@ -138,7 +142,7 @@ private extension GameBoard {
 }
 
 
-extension GameBoard where Tile: CustomStringConvertible {
+extension GameBoard where Tile: PrintableTile {
     var asciiRepresentation: String {
         let rowCount = meta.rows
         let lastValidRow = rowCount - 1
@@ -161,7 +165,7 @@ extension GameBoard where Tile: CustomStringConvertible {
                 ret.append("\n|")
             }
             ret.append(" ")
-            ret.append(tile.description)
+            ret.append(tile.tileCharacter)
             ret.append(" |")
             
             if row == lastValidRow {
@@ -215,7 +219,7 @@ extension GameBoard where Tile: CustomStringConvertible {
                 ret.append("\n│")
             }
             ret.append(" ")
-            ret.append(tile.description)
+            ret.append(tile.tileCharacter)
             ret.append(" │")
             
             if row == lastValidRow {
