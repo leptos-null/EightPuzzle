@@ -106,6 +106,28 @@ class GameGraph<Tile: TileProtocol> {
         }
     }
     
+    /// Create a graph that includes `source` and `destination`
+    ///
+    /// This initializer is generally more efficent than `init(source:)`
+    /// if you only need to inspect 1 destination because
+    /// the graph created in this initializer only requires the nodes
+    /// needed to connect `source` and `destination`.
+    /// The graph may contain more nodes than the nodes required.
+    init(source: TypedBoard, destination: TypedBoard) {
+        self.source = source
+        
+        var boardList = [source]
+        // use indices so we don't have to move any elements
+        var headIndex = boardList.startIndex
+        while headIndex != boardList.endIndex, internTable[destination] == nil {
+            let boardState = boardList[headIndex]
+            boardList.formIndex(after: &headIndex)
+            // we want the nodes to be empty, otherwise we've handled this node already
+            guard node(for: boardState).connections.isEmpty else { continue }
+            boardList.append(contentsOf: connectSiblings(for: boardState))
+        }
+    }
+    
     func leastMoves(to gameBoard: TypedBoard) -> [TypedBoard]? {
         // we haven't seen this node before - there's no path to it
         guard let destNode = internTable[gameBoard] else { return nil }
