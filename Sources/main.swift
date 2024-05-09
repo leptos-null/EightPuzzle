@@ -61,7 +61,7 @@ let question = GameBoard([
 ])
 
 let (graph, graphBuildInterval) = timeBlock {
-    GameGraph(source: solutionBoard)
+    GameGraph(source: solutionBoard, destination: question)
 }
 
 print("Built graph in \(formattedDuration(interval: graphBuildInterval))")
