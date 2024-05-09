@@ -43,7 +43,7 @@ private func timeBlock<R>(_ block: () -> R) -> (R, DispatchTimeInterval) {
     return (result, start.distance(to: end))
 }
 
-let solutionBoard = GameBoard([
+let solutionBoard = GameBoard<Character>([
     [ "1", "2", "3" ],
     [ "4", "5", "6" ],
     [ "7", "8", " " ]
@@ -54,7 +54,7 @@ let solutionBoard = GameBoard([
 // In other words, there does not exist a game board such that
 // the least amount of moves to solve it is greater than 31
 
-let question = GameBoard([
+let question = GameBoard<Character>([
     [ " ", "5", "7" ],
     [ "6", "8", "4" ],
     [ "1", "2", "3" ]
@@ -81,19 +81,9 @@ if let path {
     print("No path found")
 }
 
-
-extension Int: TileProtocol {
-    var isBlank: Bool { self == .zero }
-}
-
-extension String: TileProtocol {
+extension Character: TileProtocol {
     var isBlank: Bool { self == " " }
 }
-
-extension String: PrintableTile {
-    var tileCharacter: Character { .init(self) }
-}
-
-extension Int: PrintableTile {
-    var tileCharacter: Character { .init(String(self, radix: 36)) }
+extension Character: PrintableTile {
+    var tileCharacter: Character { self }
 }
